@@ -211,37 +211,37 @@ class AdminMain extends JFrame implements ActionListener {
         employees = new HashMap<>();
 
         viewAllButton = new JButton("View All Employees");
-        viewAllButton.setBounds(100, 50, 200, 30);
+        viewAllButton.setBounds(100, 30, 200, 30);
         viewAllButton.addActionListener(this);
         add(viewAllButton);
 
         createButton = new JButton("Create Employee");
-        createButton.setBounds(100, 90, 200, 30);
+        createButton.setBounds(100, 70, 200, 30);
         createButton.addActionListener(this);
         add(createButton);
 
         editButton = new JButton("Edit Employee");
-        editButton.setBounds(100, 130, 200, 30);
+        editButton.setBounds(100, 110, 200, 30);
         editButton.addActionListener(this);
         add(editButton);
 
         deleteButton = new JButton("Delete Employee");
-        deleteButton.setBounds(100, 170, 200, 30);
+        deleteButton.setBounds(100, 150, 200, 30);
         deleteButton.addActionListener(this);
         add(deleteButton);
 
         salaryButton = new JButton("Salary Distribution");
-        salaryButton.setBounds(100, 210, 200, 30);
+        salaryButton.setBounds(100, 190, 200, 30);
         salaryButton.addActionListener(this);
         add(salaryButton);
 
         backButton = new JButton("Back to Main Menu");
-        backButton.setBounds(100, 250, 200, 30);
+        backButton.setBounds(100, 230, 200, 30);
         backButton.addActionListener(this);
         add(backButton);
 
         exitButton = new JButton("Exit");
-        exitButton.setBounds(100, 290, 200, 30);
+        exitButton.setBounds(100, 270, 200, 30);
         exitButton.addActionListener(this);
         add(exitButton);
     }
@@ -252,11 +252,11 @@ class AdminMain extends JFrame implements ActionListener {
         } else if (e.getSource() == createButton) {
             createEmployee();
         } else if (e.getSource() == editButton) {
-            System.out.println("Edit Employee selected");
+            editEmployee();
         } else if (e.getSource() == deleteButton) {
-            System.out.println("Delete Employee selected");
+            deleteEmployee();
         } else if (e.getSource() == salaryButton) {
-            System.out.println("Salary Distribution selected");
+            distributeSalary();
         } else if (e.getSource() == backButton) {
             MainMenu mainMenuFrame = new MainMenu();
             mainMenuFrame.setVisible(true);
@@ -308,6 +308,64 @@ class AdminMain extends JFrame implements ActionListener {
         }
     }
 
+    private void editEmployee() {
+        String username = JOptionPane.showInputDialog(this, "Enter the username of the employee to edit:");
+        Employee employee = employees.get(username);
+        if (employee != null) {
+            JTextField nameField = new JTextField(employee.getName());
+            JTextField designationField = new JTextField(employee.getDesignation());
+            JTextField emailField = new JTextField(employee.getEmail());
+            JTextField phoneField = new JTextField(employee.getPhoneNumber());
+            JTextField bloodGroupField = new JTextField(employee.getBloodGroup());
+            JTextField dailyWorkField = new JTextField(employee.getDailyWork());
+            JTextField salaryField = new JTextField(employee.getMonthlySalary());
+            JTextField passwordField = new JTextField(employee.getPassword());
+
+            Object[] fields = {
+                    "Name:", nameField,
+                    "Designation:", designationField,
+                    "Email:", emailField,
+                    "Phone Number:", phoneField,
+                    "Blood Group:", bloodGroupField,
+                    "Daily Work:", dailyWorkField,
+                    "Monthly Salary:", salaryField,
+                    "Password:", passwordField
+            };
+
+            int option = JOptionPane.showConfirmDialog(null, fields, "Edit Employee", JOptionPane.OK_CANCEL_OPTION);
+            if (option == JOptionPane.OK_OPTION) {
+                employee.setName(nameField.getText());
+                employee.setDesignation(designationField.getText());
+                employee.setEmail(emailField.getText());
+                employee.setPhoneNumber(phoneField.getText());
+                employee.setBloodGroup(bloodGroupField.getText());
+                employee.setDailyWork(dailyWorkField.getText());
+                employee.setMonthlySalary(salaryField.getText());
+                employee.setPassword(passwordField.getText());
+                JOptionPane.showMessageDialog(this, "Employee updated successfully!");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Employee not found!");
+        }
+    }
+
+    private void deleteEmployee() {
+        String username = JOptionPane.showInputDialog(this, "Enter the username of the employee to delete:");
+        Employee employee = employees.remove(username);
+        if (employee != null) {
+            JOptionPane.showMessageDialog(this, "Employee deleted successfully!");
+        } else {
+            JOptionPane.showMessageDialog(this, "Employee not found!");
+        }
+    }
+
+    private void distributeSalary() {
+        for (Employee employee : employees.values()) {
+            employee.setSalaryStatus("Paid");
+        }
+        JOptionPane.showMessageDialog(this, "Salaries distributed successfully! All statuses set to 'Paid'.");
+    }
+
     private void viewAllEmployees() {
         StringBuilder employeeDetails = new StringBuilder();
         for (Employee employee : employees.values()) {
@@ -335,6 +393,7 @@ class Employee {
     private String monthlySalary;
     private String username;
     private String password;
+    private String salaryStatus;
 
     public Employee(String name, String designation, String email, String phoneNumber, String bloodGroup, String dailyWork, String monthlySalary, String username, String password) {
         this.name = name;
@@ -346,6 +405,7 @@ class Employee {
         this.monthlySalary = monthlySalary;
         this.username = username;
         this.password = password;
+        this.salaryStatus = "Due";
     }
 
     public String getName() {
@@ -384,9 +444,50 @@ class Employee {
         return password;
     }
 
+    public String getSalaryStatus() {
+        return salaryStatus;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = designation;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setBloodGroup(String bloodGroup) {
+        this.bloodGroup = bloodGroup;
+    }
+
+    public void setDailyWork(String dailyWork) {
+        this.dailyWork = dailyWork;
+    }
+
+    public void setMonthlySalary(String monthlySalary) {
+        this.monthlySalary = monthlySalary;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setSalaryStatus(String salaryStatus) {
+        this.salaryStatus = salaryStatus;
+    }
+
     @Override
     public String toString() {
         return "Name: " + name + "\nDesignation: " + designation + "\nEmail: " + email + "\nPhone Number: " + phoneNumber +
-                "\nBlood Group: " + bloodGroup + "\nDaily Work: " + dailyWork + "\nMonthly Salary: " + monthlySalary;
+                "\nBlood Group: " + bloodGroup + "\nDaily Work: " + dailyWork + "\nMonthly Salary: " + monthlySalary +
+                "\nSalary Status: " + salaryStatus;
     }
 }
