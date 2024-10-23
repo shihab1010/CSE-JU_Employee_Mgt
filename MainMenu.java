@@ -211,37 +211,61 @@ class AdminMain extends JFrame implements ActionListener {
         employees = new HashMap<>();
 
         viewAllButton = new JButton("View All Employees");
+<<<<<<< HEAD
         viewAllButton.setBounds(100, 30, 200, 30);
+=======
+        viewAllButton.setBounds(100, 50, 200, 30);
+>>>>>>> e4ef3a13afc683469e46aa2e0c747bcbc3adbb27
         viewAllButton.addActionListener(this);
         add(viewAllButton);
 
         createButton = new JButton("Create Employee");
+<<<<<<< HEAD
         createButton.setBounds(100, 70, 200, 30);
+=======
+        createButton.setBounds(100, 90, 200, 30);
+>>>>>>> e4ef3a13afc683469e46aa2e0c747bcbc3adbb27
         createButton.addActionListener(this);
         add(createButton);
 
         editButton = new JButton("Edit Employee");
+<<<<<<< HEAD
         editButton.setBounds(100, 110, 200, 30);
+=======
+        editButton.setBounds(100, 130, 200, 30);
+>>>>>>> e4ef3a13afc683469e46aa2e0c747bcbc3adbb27
         editButton.addActionListener(this);
         add(editButton);
 
         deleteButton = new JButton("Delete Employee");
+<<<<<<< HEAD
         deleteButton.setBounds(100, 150, 200, 30);
+=======
+        deleteButton.setBounds(100, 170, 200, 30);
+>>>>>>> e4ef3a13afc683469e46aa2e0c747bcbc3adbb27
         deleteButton.addActionListener(this);
         add(deleteButton);
 
         salaryButton = new JButton("Salary Distribution");
+<<<<<<< HEAD
         salaryButton.setBounds(100, 190, 200, 30);
+=======
+        salaryButton.setBounds(100, 210, 200, 30);
+>>>>>>> e4ef3a13afc683469e46aa2e0c747bcbc3adbb27
         salaryButton.addActionListener(this);
         add(salaryButton);
 
         backButton = new JButton("Back to Main Menu");
+<<<<<<< HEAD
         backButton.setBounds(100, 230, 200, 30);
+=======
+        backButton.setBounds(100, 250, 200, 30);
+>>>>>>> e4ef3a13afc683469e46aa2e0c747bcbc3adbb27
         backButton.addActionListener(this);
         add(backButton);
 
         exitButton = new JButton("Exit");
-        exitButton.setBounds(100, 270, 200, 30);
+        exitButton.setBounds(100, 290, 200, 30);
         exitButton.addActionListener(this);
         add(exitButton);
     }
@@ -256,7 +280,11 @@ class AdminMain extends JFrame implements ActionListener {
         } else if (e.getSource() == deleteButton) {
             deleteEmployee();
         } else if (e.getSource() == salaryButton) {
+<<<<<<< HEAD
             distributeSalary();
+=======
+            System.out.println("Salary Distribution selected");
+>>>>>>> e4ef3a13afc683469e46aa2e0c747bcbc3adbb27
         } else if (e.getSource() == backButton) {
             MainMenu mainMenuFrame = new MainMenu();
             mainMenuFrame.setVisible(true);
@@ -308,6 +336,7 @@ class AdminMain extends JFrame implements ActionListener {
         }
     }
 
+<<<<<<< HEAD
     private void editEmployee() {
         String username = JOptionPane.showInputDialog(this, "Enter the username of the employee to edit:");
         Employee employee = employees.get(username);
@@ -366,6 +395,8 @@ class AdminMain extends JFrame implements ActionListener {
         JOptionPane.showMessageDialog(this, "Salaries distributed successfully! All statuses set to 'Paid'.");
     }
 
+=======
+>>>>>>> e4ef3a13afc683469e46aa2e0c747bcbc3adbb27
     private void viewAllEmployees() {
         StringBuilder employeeDetails = new StringBuilder();
         for (Employee employee : employees.values()) {
@@ -381,6 +412,75 @@ class AdminMain extends JFrame implements ActionListener {
         }
         return null;
     }
+<<<<<<< HEAD
+=======
+}
+
+class Employee {
+    private String name;
+    private String designation;
+    private String email;
+    private String phoneNumber;
+    private String bloodGroup;
+    private String dailyWork;
+    private String monthlySalary;
+    private String username;
+    private String password;
+
+    public Employee(String name, String designation, String email, String phoneNumber, String bloodGroup, String dailyWork, String monthlySalary, String username, String password) {
+        this.name = name;
+        this.designation = designation;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.bloodGroup = bloodGroup;
+        this.dailyWork = dailyWork;
+        this.monthlySalary = monthlySalary;
+        this.username = username;
+        this.password = password;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDesignation() {
+        return designation;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getBloodGroup() {
+        return bloodGroup;
+    }
+
+    public String getDailyWork() {
+        return dailyWork;
+    }
+
+    public String getMonthlySalary() {
+        return monthlySalary;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String toString() {
+        return "Name: " + name + "\nDesignation: " + designation + "\nEmail: " + email + "\nPhone Number: " + phoneNumber +
+                "\nBlood Group: " + bloodGroup + "\nDaily Work: " + dailyWork + "\nMonthly Salary: " + monthlySalary;
+    }
+>>>>>>> e4ef3a13afc683469e46aa2e0c747bcbc3adbb27
 }
 
 class Employee {
