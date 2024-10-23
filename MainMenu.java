@@ -1,8 +1,11 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 public class MainMenu extends JFrame implements ActionListener {
     private JButton userLoginButton, adminLoginButton;
@@ -144,6 +147,7 @@ class UserLogin extends JFrame implements ActionListener {
             String password = new String(passField.getPassword());
             Employee employee = AdminMain.getEmployee(username, password);
             if (employee != null) {
+                employee.setLastPaidDate(new Date());
                 UserProfile userProfileFrame = new UserProfile(employee);
                 userProfileFrame.setVisible(true);
                 dispose();
@@ -196,52 +200,61 @@ class UserProfile extends JFrame {
         JLabel salaryLabel = new JLabel("Monthly Salary: " + employee.getMonthlySalary());
         salaryLabel.setBounds(50, 310, 300, 25);
         add(salaryLabel);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String lastPaidDateString = dateFormat.format(employee.getLastPaidDate());
+        JLabel salaryStatusLabel = new JLabel("Salary Status: " + employee.getSalaryStatus() /*+ " on " + lastPaidDateString*/);
+        salaryStatusLabel.setBounds(50, 350, 300, 25);
+        add(salaryStatusLabel);
     }
 }
 
 class AdminMain extends JFrame implements ActionListener {
     private JButton viewAllButton, createButton, editButton, deleteButton, salaryButton, exitButton, backButton;
     private static Map<String, Employee> employees;
+    private double totalBalance = 0.0; // set initial balance
 
     public AdminMain() {
         setTitle("CSE-JU Employee Management");
         setSize(400, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
+
         employees = new HashMap<>();
 
         viewAllButton = new JButton("View All Employees");
-        viewAllButton.setBounds(100, 30, 200, 30);
+        viewAllButton.setBounds(100, 50, 200, 30);
         viewAllButton.addActionListener(this);
         add(viewAllButton);
 
         createButton = new JButton("Create Employee");
-        createButton.setBounds(100, 70, 200, 30);
+        createButton.setBounds(100, 90, 200, 30);
         createButton.addActionListener(this);
         add(createButton);
 
         editButton = new JButton("Edit Employee");
-        editButton.setBounds(100, 110, 200, 30);
+        editButton.setBounds(100, 130, 200, 30);
         editButton.addActionListener(this);
         add(editButton);
 
         deleteButton = new JButton("Delete Employee");
-        deleteButton.setBounds(100, 150, 200, 30);
+        deleteButton.setBounds(100, 170, 200, 30);
         deleteButton.addActionListener(this);
         add(deleteButton);
 
         salaryButton = new JButton("Salary Distribution");
-        salaryButton.setBounds(100, 190, 200, 30);
+        salaryButton.setBounds(100, 210, 200, 30);
         salaryButton.addActionListener(this);
         add(salaryButton);
 
         backButton = new JButton("Back to Main Menu");
-        backButton.setBounds(100, 230, 200, 30);
+        backButton.setBounds(100, 250, 200, 30);
+
         backButton.addActionListener(this);
         add(backButton);
 
         exitButton = new JButton("Exit");
-        exitButton.setBounds(100, 270, 200, 30);
+        exitButton.setBounds(100, 290, 200, 30);
         exitButton.addActionListener(this);
         add(exitButton);
     }
@@ -268,6 +281,7 @@ class AdminMain extends JFrame implements ActionListener {
     }
 
     private void createEmployee() {
+        JPanel panel = new JPanel(new GridLayout(0, 2));
         JTextField nameField = new JTextField();
         JTextField designationField = new JTextField();
         JTextField emailField = new JTextField();
@@ -276,22 +290,39 @@ class AdminMain extends JFrame implements ActionListener {
         JTextField dailyWorkField = new JTextField();
         JTextField salaryField = new JTextField();
         JTextField usernameField = new JTextField();
-        JTextField passwordField = new JTextField();
+        JPasswordField passwordField = new JPasswordField();
 
-        Object[] fields = {
-                "Name:", nameField,
-                "Designation:", designationField,
-                "Email:", emailField,
-                "Phone Number:", phoneField,
-                "Blood Group:", bloodGroupField,
-                "Daily Work:", dailyWorkField,
-                "Monthly Salary:", salaryField,
-                "Username:", usernameField,
-                "Password:", passwordField
-        };
+        panel.add(new JLabel("Name:"));
+        panel.add(nameField);
+        panel.add(new JLabel("Designation:"));
+        panel.add(designationField);
+        panel.add(new JLabel("Email:"));
+        panel.add(emailField);
+        panel.add(new JLabel("Phone Number:"));
+        panel.add(phoneField);
+        panel.add(new JLabel("Blood Group:"));
+        panel.add(bloodGroupField);
+        panel.add(new JLabel("Daily Work:"));
+        panel.add(dailyWorkField);
+        panel.add(new JLabel("Monthly Salary:"));
+        panel.add(salaryField);
+        panel.add(new JLabel("Username:"));
+        panel.add(usernameField);
+        panel.add(new JLabel("Password:"));
+        panel.add(passwordField);
 
-        int option = JOptionPane.showConfirmDialog(null, fields, "Create Employee", JOptionPane.OK_CANCEL_OPTION);
-        if (option == JOptionPane.OK_OPTION) {
+        int result = JOptionPane.showConfirmDialog(null, panel, "Create Employee",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (result == JOptionPane.OK_OPTION) {
+            if (nameField.getText().isEmpty() || designationField.getText().isEmpty() ||
+                    emailField.getText().isEmpty() || phoneField.getText().isEmpty() ||
+                    bloodGroupField.getText().isEmpty() || dailyWorkField.getText().isEmpty() ||
+                    salaryField.getText().isEmpty() || usernameField.getText().isEmpty() ||
+                    new String(passwordField.getPassword()).isEmpty()) {
+                JOptionPane.showMessageDialog(null, "All fields must be filled", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             Employee newEmployee = new Employee(
                     nameField.getText(),
                     designationField.getText(),
@@ -301,7 +332,7 @@ class AdminMain extends JFrame implements ActionListener {
                     dailyWorkField.getText(),
                     salaryField.getText(),
                     usernameField.getText(),
-                    passwordField.getText()
+                    new String(passwordField.getPassword())
             );
             employees.put(usernameField.getText(), newEmployee);
             JOptionPane.showMessageDialog(this, "Employee created successfully!");
@@ -311,6 +342,7 @@ class AdminMain extends JFrame implements ActionListener {
     private void editEmployee() {
         String username = JOptionPane.showInputDialog(this, "Enter the username of the employee to edit:");
         Employee employee = employees.get(username);
+
         if (employee != null) {
             JTextField nameField = new JTextField(employee.getName());
             JTextField designationField = new JTextField(employee.getDesignation());
@@ -333,6 +365,7 @@ class AdminMain extends JFrame implements ActionListener {
             };
 
             int option = JOptionPane.showConfirmDialog(null, fields, "Edit Employee", JOptionPane.OK_CANCEL_OPTION);
+
             if (option == JOptionPane.OK_OPTION) {
                 employee.setName(nameField.getText());
                 employee.setDesignation(designationField.getText());
@@ -352,6 +385,7 @@ class AdminMain extends JFrame implements ActionListener {
     private void deleteEmployee() {
         String username = JOptionPane.showInputDialog(this, "Enter the username of the employee to delete:");
         Employee employee = employees.remove(username);
+
         if (employee != null) {
             JOptionPane.showMessageDialog(this, "Employee deleted successfully!");
         } else {
@@ -360,10 +394,32 @@ class AdminMain extends JFrame implements ActionListener {
     }
 
     private void distributeSalary() {
-        for (Employee employee : employees.values()) {
-            employee.setSalaryStatus("Paid");
+        JTextField balanceField = new JTextField(String.valueOf(totalBalance));
+        JTextField addBalanceField = new JTextField();
+        Object[] fields = {
+                "Current Total Balance:", balanceField,
+                "Add to Total Balance:", addBalanceField
+        };
+
+        int option = JOptionPane.showConfirmDialog(null, fields, "Salary Distribution", JOptionPane.OK_CANCEL_OPTION);
+
+        if (option == JOptionPane.OK_OPTION) {
+            double addBalance = addBalanceField.getText().isEmpty() ? 0 : Double.parseDouble(addBalanceField.getText());
+            totalBalance += addBalance;
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            String currentDate = dateFormat.format(new Date());
+            double totalSalaries = 0;
+
+            for (Employee employee : employees.values()) {
+                totalSalaries += Double.parseDouble(employee.getMonthlySalary());
+                employee.setSalaryStatus("Paid on " + currentDate);
+                employee.setLastPaidDate(new Date());
+            }
+
+            totalBalance -= totalSalaries;
+            JOptionPane.showMessageDialog(this, "Salaries distributed successfully! All statuses set to 'Paid' with the current date.");
         }
-        JOptionPane.showMessageDialog(this, "Salaries distributed successfully! All statuses set to 'Paid'.");
     }
 
     private void viewAllEmployees() {
@@ -394,6 +450,7 @@ class Employee {
     private String username;
     private String password;
     private String salaryStatus;
+    private Date lastPaidDate;
 
     public Employee(String name, String designation, String email, String phoneNumber, String bloodGroup, String dailyWork, String monthlySalary, String username, String password) {
         this.name = name;
@@ -406,88 +463,38 @@ class Employee {
         this.username = username;
         this.password = password;
         this.salaryStatus = "Due";
+        this.lastPaidDate = null;
     }
 
-    public String getName() {
-        return name;
-    }
+    public String getName() { return name; }
+    public String getDesignation() { return designation; }
+    public String getEmail() { return email; }
+    public String getPhoneNumber() { return phoneNumber; }
+    public String getBloodGroup() { return bloodGroup; }
+    public String getDailyWork() { return dailyWork; }
+    public String getMonthlySalary() { return monthlySalary; }
+    public String getUsername() { return username; }
+    public String getPassword() { return password; }
+    public String getSalaryStatus() { return salaryStatus; }
+    public Date getLastPaidDate() { return lastPaidDate; }
 
-    public String getDesignation() {
-        return designation;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public String getBloodGroup() {
-        return bloodGroup;
-    }
-
-    public String getDailyWork() {
-        return dailyWork;
-    }
-
-    public String getMonthlySalary() {
-        return monthlySalary;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getSalaryStatus() {
-        return salaryStatus;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDesignation(String designation) {
-        this.designation = designation;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public void setBloodGroup(String bloodGroup) {
-        this.bloodGroup = bloodGroup;
-    }
-
-    public void setDailyWork(String dailyWork) {
-        this.dailyWork = dailyWork;
-    }
-
-    public void setMonthlySalary(String monthlySalary) {
-        this.monthlySalary = monthlySalary;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setSalaryStatus(String salaryStatus) {
-        this.salaryStatus = salaryStatus;
-    }
+    public void setName(String name) { this.name = name; }
+    public void setDesignation(String designation) { this.designation = designation; }
+    public void setEmail(String email) { this.email = email; }
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+    public void setBloodGroup(String bloodGroup) { this.bloodGroup = bloodGroup; }
+    public void setDailyWork(String dailyWork) { this.dailyWork = dailyWork; }
+    public void setMonthlySalary(String monthlySalary) { this.monthlySalary = monthlySalary; }
+    public void setPassword(String password) { this.password = password; }
+    public void setSalaryStatus(String salaryStatus) { this.salaryStatus = salaryStatus; }
+    public void setLastPaidDate(Date lastPaidDate) { this.lastPaidDate = lastPaidDate; }
 
     @Override
     public String toString() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String lastPaidDateString = (lastPaidDate != null) ? dateFormat.format(lastPaidDate) : "N/A";
         return "Name: " + name + "\nDesignation: " + designation + "\nEmail: " + email + "\nPhone Number: " + phoneNumber +
                 "\nBlood Group: " + bloodGroup + "\nDaily Work: " + dailyWork + "\nMonthly Salary: " + monthlySalary +
-                "\nSalary Status: " + salaryStatus;
+                "\nSalary Status: " + salaryStatus + "\nLast Paid Date: " + lastPaidDateString;
     }
 }
