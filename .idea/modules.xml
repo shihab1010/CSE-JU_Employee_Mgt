@@ -2,7 +2,15 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+<<<<<<< HEAD
       <module fileurl="file://$PROJECT_DIR$/.idea/CSE-JU_Employee_Mgt.iml" filepath="$PROJECT_DIR$/.idea/CSE-JU_Employee_Mgt.iml" />
+=======
+<<<<<<< HEAD
+      <module fileurl="file://$PROJECT_DIR$/.idea/CSE-JU_Employee_Mgt.iml" filepath="$PROJECT_DIR$/.idea/CSE-JU_Employee_Mgt.iml" />
+=======
+      <module fileurl="file://$PROJECT_DIR$/CSE-JU_Employee_Mgt.iml" filepath="$PROJECT_DIR$/CSE-JU_Employee_Mgt.iml" />
+>>>>>>> 05eaf550ba6a88d195aff9a043ec017e27e16329
+>>>>>>> e4ef3a13afc683469e46aa2e0c747bcbc3adbb27
     </modules>
   </component>
 </project>
